@@ -1,0 +1,6 @@
+
+mnt/logs/nginx
+mnt/logs/tomcat
+
+mnt/data/elasticsearch
+mnt/data/postgres

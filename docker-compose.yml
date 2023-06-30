@@ -1,0 +1,123 @@
+version: "3"
+
+services:
+
+  ## ---- lucee
+  lucee:
+    # image: isapir/lucee-5.3.10:latest
+    build:
+      context: ./build/lucee-alpine
+      dockerfile: Dockerfile
+      args:
+        - GROUP_ID=1000
+        - LUCEE_VERSION=${LUCEE_VERSION}
+        - LUCEE_ADMIN_PASSWORD=${LUCEE_ADMIN_PASSWORD}
+        - LUCEE_EXTENSIONS=${LUCEE_EXTENSIONS}
+    env_file: .env
+    volumes:
+      - "${HOST_APP_WEBROOT}:${LUCEE_APP_WEBROOT}"
+      - "${HOST_APP_LOGS}/tomcat:/srv/www/catalina-base/logs/"
+      - "/workspace/src/lucee/5.x/core/src/main/cfml/context:/mnt/lucee-src-cfml-context"
+    user: "${RUNAS_USER}"
+    ports:
+      - "${HOST_PORT_LUCEE}:8080"
+    pid: "host"
+    ### uncomment for troubleshooting
+    # entrypoint: /bin/bash
+    # stdin_open: true # docker run -i
+    # tty: true        # docker run -t
+
+  ## ---- nginx
+  nginx:
+    # image: isapir/nginx:1.23.3
+    build:
+      context: ./build/nginx-alpine
+      dockerfile: Dockerfile
+      args:
+        - NGINX_VERSION=${NGINX_VERSION}
+        - NGINX_OPENSSL_VERSION=${NGINX_OPENSSL_VERSION}
+        - NGINX_ZLIB_VERSION=${NGINX_ZLIB_VERSION}
+    env_file: .env
+    volumes:
+      - "${HOST_APP_CONFIG}/nginx:/usr/local/nginx/conf"
+      - "${HOST_APP_LOGS}/nginx:/usr/local/nginx/logs"
+      - "${HOST_APP_WEBROOT}:/srv/www/app/webroot"
+    user: "${RUNAS_USER}"
+    ports:
+      - "${HOST_PORT_NGINX}:80"
+    pid: "host"
+    ### uncomment for troubleshooting
+    # entrypoint: /bin/sh
+    # stdin_open: true # docker run -i
+    # tty: true        # docker run -t
+
+  ## ---- postgres
+  postgres:
+    image: postgres:${POSTGRES_VERSION}
+    env_file: .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      ## host dir should be created beforehand by ${RUNAS_USER}
+      - "${HOST_APP_DATA}/postgres:/var/lib/postgresql/data"
+      ## map host users to container with readonly mount so that user would work
+      - "/etc/passwd:/etc/passwd:ro"
+    ## use user:group from env file which should be in host /etc/passwd
+    user: ${RUNAS_USER}
+    ports:
+      - "${HOST_PORT_POSTGRES}:5432"
+    pid: "host"
+    stop_grace_period: 7s
+
+  ## ---- redis
+  redis:
+    profiles:
+      - redis
+    image: redis:7
+    ports:
+      - "${HOST_PORT_REDIS}:6379"
+    pid: "host"
+
+  ## ---- elasticsearch
+  elasticsearch:
+    profiles:
+      - elasticsearch
+    image: elasticsearch:8.5.3
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+      - ${HOST_APP_DATA}/elasticsearch:/usr/share/elasticsearch/data
+    ports:
+    - "9200:9200"
+    - "9300:9300"
+
+  ## ---- test email sending
+  mailhog:
+    image: mailhog/mailhog
+    expose:
+      - 1025
+    ports:
+      - "8025:8025"
+    pid: "host"
+
+  ## ---- helper image for multistage builds
+  alpine-builder:
+    image: isapir/alpine-builder
+    build:
+      context: ./build/alpine-builder
+      dockerfile: Dockerfile
+    deploy:
+      replicas: 0
+
+  ## ---- base image for lucee
+  tomcat-alpine:
+    image: isapir/tomcat-alpine
+    build:
+      context: ./build/tomcat-alpine
+      dockerfile: Dockerfile
+      args:
+        - TOMCAT_VERSION=9.0.76
+    deploy:
+      replicas: 0
