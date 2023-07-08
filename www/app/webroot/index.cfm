@@ -1,10 +1,20 @@
+<html>
+    <head>
+        <title>Lucee Lab Test App</title>
+    </head>
+    <body>
+
 <cfoutput>
     <h1>Lucee #Server.lucee.version#</h1>
     <h2>Server time: #now()#</h2>
     <h2>Webroot is mounted from host: #Server.system.environment.HOST_APP_WEBROOT#
+    
     <h2>Lucee Admin*: <a href="/lucee/admin/server.cfm" target="lucee_admin">/lucee/admin/server.cfm</a></h2>
-    <p>* The Lucee Admin is only accessible on the Lucee port, and is blocked via nginx. 
-        Password is: #Server.system.environment.LUCEE_ADMIN_PASSWORD#
+    <cfif (CGI.SERVER_PORT != Server.system.environment.HOST_PORT_LUCEE)>
+        <p>* The Lucee Admin is only accessible on the Lucee port (#Server.system.environment.HOST_PORT_LUCEE#)
+    </cfif>
+    
+    Password is: #Server.system.environment.LUCEE_ADMIN_PASSWORD#
 </cfoutput>
 
 <p>
@@ -30,7 +40,7 @@
     <cfdump var="#red#" label="Redis INFO">
 
     <cfcatch>
-        <cfdump eval="cfcatch">
+        <cfdump eval="cfcatch.message">
     </cfcatch>
 </cftry>
 
@@ -42,3 +52,6 @@
 
 <p>
 <cfdump eval="CGI">
+
+    </body>
+</html>

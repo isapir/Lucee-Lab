@@ -4,7 +4,7 @@ services:
 
   ## ---- lucee
   lucee:
-    # image: isapir/lucee-5.3.10:latest
+    image: isapir/lucee-alpine
     build:
       context: ./build/lucee-alpine
       dockerfile: Dockerfile
@@ -29,7 +29,7 @@ services:
 
   ## ---- nginx
   nginx:
-    # image: isapir/nginx:1.23.3
+    image: isapir/nginx-alpine
     build:
       context: ./build/nginx-alpine
       dockerfile: Dockerfile
@@ -72,17 +72,15 @@ services:
 
   ## ---- redis
   redis:
-    profiles:
-      - redis
     image: redis:7
     ports:
       - "${HOST_PORT_REDIS}:6379"
     pid: "host"
+    profiles:
+      - redis
 
   ## ---- elasticsearch
   elasticsearch:
-    profiles:
-      - elasticsearch
     image: elasticsearch:8.5.3
     environment:
       - discovery.type=single-node
@@ -92,6 +90,8 @@ services:
     ports:
     - "9200:9200"
     - "9300:9300"
+    profiles:
+      - elasticsearch
 
   ## ---- test email sending
   mailhog:
@@ -101,6 +101,8 @@ services:
     ports:
       - "8025:8025"
     pid: "host"
+    profiles:
+      - mailhog
 
   ## ---- helper image for multistage builds
   alpine-builder:
