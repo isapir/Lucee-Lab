@@ -17,7 +17,7 @@ services:
     volumes:
       - "${HOST_APP_WEBROOT}:${LUCEE_APP_WEBROOT}"
       - "${HOST_APP_LOGS}/tomcat:/srv/www/catalina-base/logs/"
-      - "/workspace/src/lucee/5.x/core/src/main/cfml/context:/mnt/lucee-src-cfml-context"
+    # - "/workspace/src/lucee/5.x/core/src/main/cfml/context:/mnt/lucee-src-cfml-context"
     user: "${RUNAS_USER}"
     ports:
       - "${HOST_PORT_LUCEE}:8080"
