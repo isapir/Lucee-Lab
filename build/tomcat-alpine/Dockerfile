@@ -1,5 +1,5 @@
 ARG BASE_JAVA_IMAGE=azul/zulu-openjdk-alpine:11-jre-latest
-ARG TOMCAT_VERSION=9.0.70
+ARG TOMCAT_VERSION=9.0.76
 
 ARG TOMCAT_FILENAME="apache-tomcat-${TOMCAT_VERSION}"
 ARG CATALINA_HOME_DIR=/srv/www/catalina-home

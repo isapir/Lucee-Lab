@@ -2,7 +2,7 @@ ARG LUCEE_VERSION=5.3.10.97
 
 ARG LUCEE_JAR_FILE="lucee-${LUCEE_VERSION}.jar"
 
-ARG USER_ID=0
+ARG USER_ID=1000
 ARG GROUP_ID=1000
 
 ARG SERVER_WEBROOT=/srv/www/catalina-base/webapps/ROOT
@@ -19,7 +19,7 @@ ARG CATALINA_OPTS=
 
 
 ## downloads utils and creates /usr/local/src
-FROM isapir/alpine-builder AS builder
+FROM ghcr.io/isapir/alpine-builder AS builder
 # FROM lucee-lab_alpine-builder AS builder
 
 ARG LUCEE_VERSION
@@ -29,7 +29,7 @@ ARG LUCEE_DOWNLOAD=http://release.lucee.org/rest/update/provider/loader/
 RUN curl -sSL -o ${LUCEE_JAR_FILE} --create-dirs "${LUCEE_DOWNLOAD}${LUCEE_VERSION}" 
 
 
-FROM isapir/tomcat-alpine AS tomcat-builder
+FROM ghcr.io/isapir/tomcat-alpine AS tomcat-builder
 # FROM lucee-lab_tomcat-alpine AS tomcat-builder
 
 ARG LUCEE_JAR_FILE
@@ -69,7 +69,7 @@ RUN echo "Hello Lucee <cfset echo(Server.lucee.version)>" > ${CATALINA_BASE}/web
     && chmod g+srwX -R /srv/www
 
 
-FROM isapir/tomcat-alpine AS lucee
+FROM ghcr.io/isapir/tomcat-alpine AS lucee
 
 ARG SERVER_WEBROOT
 ARG USER_ID

@@ -2,9 +2,9 @@ version: "3"
 
 services:
 
-  ## ---- lucee
+  ### ---- lucee
   lucee:
-    # image: isapir/lucee-alpine
+    image: ghcr.io/isapir/lucee-alpine:${LUCEE_VERSION}
     build:
       context: ./build/lucee-alpine
       dockerfile: Dockerfile
@@ -27,9 +27,9 @@ services:
     # stdin_open: true # docker run -i
     # tty: true        # docker run -t
 
-  ## ---- nginx
+  ### ---- nginx
   nginx:
-    # image: isapir/nginx-alpine
+    image: ghcr.io/isapir/nginx-alpine:${NGINX_VERSION}
     build:
       context: ./build/nginx-alpine
       dockerfile: Dockerfile
@@ -51,7 +51,7 @@ services:
     # stdin_open: true # docker run -i
     # tty: true        # docker run -t
 
-  ## ---- postgres
+  ### ---- postgres
   postgres:
     image: postgres:${POSTGRES_VERSION}
     env_file: .env
@@ -70,7 +70,7 @@ services:
     # pid: "host"
     stop_grace_period: 7s
 
-  ## ---- redis
+  ### ---- redis
   redis:
     image: redis:7
     ports:
@@ -79,7 +79,7 @@ services:
     profiles:
       - redis
 
-  ## ---- elasticsearch
+  ### ---- elasticsearch
   elasticsearch:
     image: elasticsearch:8.5.3
     environment:
@@ -93,7 +93,7 @@ services:
     profiles:
       - elasticsearch
 
-  ## ---- test email sending
+  ### ---- test email sending
   mailhog:
     image: mailhog/mailhog
     expose:
@@ -104,22 +104,24 @@ services:
     profiles:
       - mailhog
 
-  ## ---- helper image for multistage builds
+  ### ---- helper image for multistage builds
   alpine-builder:
-    image: isapir/alpine-builder
+    image: ghcr.io/isapir/alpine-builder
     build:
       context: ./build/alpine-builder
       dockerfile: Dockerfile
+    ## prevent running this helper image by setting deploy/replicas to 0
     deploy:
       replicas: 0
 
-  ## ---- base image for lucee
+  ### ---- helper image base for lucee
   tomcat-alpine:
-    image: isapir/tomcat-alpine
+    image: ghcr.io/isapir/tomcat-alpine
     build:
       context: ./build/tomcat-alpine
       dockerfile: Dockerfile
       args:
         - TOMCAT_VERSION=9.0.76
+    ## prevent running this helper image by setting deploy/replicas to 0
     deploy:
       replicas: 0
