@@ -4,7 +4,7 @@ services:
 
   ## ---- lucee
   lucee:
-    image: isapir/lucee-alpine
+    # image: isapir/lucee-alpine
     build:
       context: ./build/lucee-alpine
       dockerfile: Dockerfile
@@ -21,7 +21,7 @@ services:
     user: "${RUNAS_USER}"
     ports:
       - "${HOST_PORT_LUCEE}:8080"
-    pid: "host"
+    # pid: "host"
     ### uncomment for troubleshooting
     # entrypoint: /bin/bash
     # stdin_open: true # docker run -i
@@ -29,7 +29,7 @@ services:
 
   ## ---- nginx
   nginx:
-    image: isapir/nginx-alpine
+    # image: isapir/nginx-alpine
     build:
       context: ./build/nginx-alpine
       dockerfile: Dockerfile
@@ -45,7 +45,7 @@ services:
     user: "${RUNAS_USER}"
     ports:
       - "${HOST_PORT_NGINX}:80"
-    pid: "host"
+    # pid: "host"
     ### uncomment for troubleshooting
     # entrypoint: /bin/sh
     # stdin_open: true # docker run -i
@@ -67,7 +67,7 @@ services:
     user: ${RUNAS_USER}
     ports:
       - "${HOST_PORT_POSTGRES}:5432"
-    pid: "host"
+    # pid: "host"
     stop_grace_period: 7s
 
   ## ---- redis
@@ -75,7 +75,7 @@ services:
     image: redis:7
     ports:
       - "${HOST_PORT_REDIS}:6379"
-    pid: "host"
+    # pid: "host"
     profiles:
       - redis
 
@@ -100,7 +100,7 @@ services:
       - 1025
     ports:
       - "8025:8025"
-    pid: "host"
+    # pid: "host"
     profiles:
       - mailhog
 

@@ -1,8 +1,8 @@
 ## image size 1.36GB
 FROM alpine AS nginx-builder
 
-ARG NGINX_VERSION=1.23.3
-ARG NGINX_OPENSSL_VERSION=3.0.7
+ARG NGINX_VERSION=1.25.1
+ARG NGINX_OPENSSL_VERSION=3.1.1
 ARG NGINX_ZLIB_VERSION=1.2.13
 ARG NGINX_DIR=/usr/local/nginx
 
@@ -44,8 +44,9 @@ FROM alpine AS nginx
 
 ARG USER_ID
 ARG GROUP_ID
+ARG NGINX_DIR=/usr/local/nginx
 
-COPY --chown=${USER_ID}:${GROUP_ID} --from=nginx-builder /usr/local/nginx /usr/local/nginx
+COPY --chown=${USER_ID}:${GROUP_ID} --from=nginx-builder ${NGINX_DIR} ${NGINX_DIR}
 
 ## fails with failed to solve: executor failed running, put it in /tmp for now
 # RUN    addgroup --system --gid ${GROUP_ID} www \
@@ -57,8 +58,10 @@ EXPOSE 80 443
 
 USER ${USER_ID}:${GROUP_ID}
 
+ENV NGINX_DIR=${NGINX_DIR}
+
 ## make it easy to run nginx without the full path
 ENV PATH="${PATH}:/usr/local/nginx/sbin"
 
-CMD ["/usr/local/nginx/sbin/nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"]
 
