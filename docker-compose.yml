@@ -69,6 +69,8 @@ services:
       - "${HOST_PORT_POSTGRES}:5432"
     # pid: "host"
     stop_grace_period: 7s
+    profiles:
+      - postgres
 
   ### ---- redis
   redis:
@@ -104,13 +106,14 @@ services:
     profiles:
       - mailhog
 
+  #### Helper images below used for Build stages only, therefore deploy/replicas: 0
+
   ### ---- helper image for multistage builds
   alpine-builder:
     image: ghcr.io/isapir/alpine-builder
     build:
       context: ./build/alpine-builder
       dockerfile: Dockerfile
-    ## prevent running this helper image by setting deploy/replicas to 0
     deploy:
       replicas: 0
 
@@ -122,6 +125,5 @@ services:
       dockerfile: Dockerfile
       args:
         - TOMCAT_VERSION=9.0.76
-    ## prevent running this helper image by setting deploy/replicas to 0
     deploy:
       replicas: 0

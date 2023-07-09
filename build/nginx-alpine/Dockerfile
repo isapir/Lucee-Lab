@@ -6,7 +6,7 @@ ARG NGINX_OPENSSL_VERSION=3.1.1
 ARG NGINX_ZLIB_VERSION=1.2.13
 ARG NGINX_DIR=/usr/local/nginx
 
-ARG USER_ID=0
+ARG USER_ID=1000
 ARG GROUP_ID=1000
 
 RUN apk --update add bash curl perl vim pcre-dev build-base linux-headers \
