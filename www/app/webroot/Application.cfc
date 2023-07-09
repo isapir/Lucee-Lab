@@ -10,11 +10,19 @@ component {
     //  bundleVersion: "42.2.18",
         connectionString: "jdbc:postgresql://postgres:5432/postgres",
         username: "postgres",
-        password: "s3cret",
-    //  password: "encrypted:e890e9402dafdf6c1b0d3dfc6e2d148c181fc5ca54f74cdf",
+		password: Server.system.environment.POSTGRES_PASSWORD,
     };
 
-    this.datasource = this.datasources.postgres;
+	this.datasources["mysql"] = {
+		class: "com.mysql.cj.jdbc.Driver", 
+		bundleName: "com.mysql.cj", 
+	// 	bundleVersion: "8.0.33",
+		connectionString: "jdbc:mysql://mysql:3306/db?characterEncoding=UTF-8",
+		username: "root",
+		password: Server.system.environment.MYSQL_PASSWORD,
+	};
+
+    // this.datasource = this.datasources.postgres;
 
     this.cache.connections["redis"] = {
 		class: 'lucee.extension.io.cache.redis.simple.RedisCache',

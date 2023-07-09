@@ -33,6 +33,20 @@
 
 <p>
 <cftry>
+    <cfquery name="q" datasource="mysql">
+        SELECT  version() AS db_version,
+                current_timestamp;
+    </cfquery>
+
+    <cfdump var="#q#" label="MySQL Version">
+
+    <cfcatch>
+        <cfdump var="#cfcatch.message#" label="MySQL Version">
+    </cfcatch>
+</cftry>
+    
+<p>
+<cftry>
 
     <!--- <cfset red = redisCommand(arguments: ["KEYS", "*"], cache: "redis")> --->
     <cfset red = redisCommand(arguments: ["INFO"], cache: "redis")>

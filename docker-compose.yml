@@ -72,6 +72,23 @@ services:
     profiles:
       - postgres
 
+  ### ---- mysql
+  mysql:
+    image: mysql:${MYSQL_VERSION}
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DB}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      ## host dir should be created beforehand by ${RUNAS_USER}
+      - "${HOST_APP_DATA}/mysql:/var/lib/mysql"
+    # user: ${RUNAS_USER}
+    ports:
+      - "${HOST_PORT_MYSQL}:3306"
+    # pid: "host"
+    stop_grace_period: 7s
+    profiles:
+      - mysql
+
   ### ---- redis
   redis:
     image: redis:7
