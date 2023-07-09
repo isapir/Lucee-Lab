@@ -27,7 +27,7 @@
     <cfdump var="#q#" label="Postgres Version">
 
     <cfcatch>
-        <cfdump eval="cfcatch">
+        <cfdump var="#cfcatch.message#" label="Postgres Version">
     </cfcatch>
 </cftry>
 
@@ -40,7 +40,7 @@
     <cfdump var="#red#" label="Redis INFO">
 
     <cfcatch>
-        <cfdump eval="cfcatch.message">
+        <cfdump var="#cfcatch.message#" label="Redis INFO">
     </cfcatch>
 </cftry>
 
