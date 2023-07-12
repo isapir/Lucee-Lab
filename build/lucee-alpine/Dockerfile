@@ -50,7 +50,7 @@ COPY --chown=${USER_ID}:${GROUP_ID} ./resources/catalina-base ${CATALINA_BASE}
 
 COPY --chown=${USER_ID}:${GROUP_ID} --from=builder /usr/local/src/${LUCEE_JAR_FILE} ${CATALINA_BASE}/lib
 
-RUN echo "Hello Lucee <cfset echo(Server.lucee.version)>" > ${CATALINA_BASE}/webapps/ROOT/index.cfm \
+RUN echo "<cfoutput>Hello Lucee #Server.lucee.version# at #dateTimeFormat(now(), 'ISO8601')#</cfoutput>" > ${CATALINA_BASE}/webapps/ROOT/index.cfm \
     && echo "Enabled LUCEE_ENABLE_WARMUP" \
     && export LUCEE_ENABLE_WARMUP=true \
     &&  if [ -n "${LUCEE_EXTENSIONS}" ] ; then \

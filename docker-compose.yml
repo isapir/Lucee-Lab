@@ -141,6 +141,6 @@ services:
       context: ./build/tomcat-alpine
       dockerfile: Dockerfile
       args:
-        - TOMCAT_VERSION=9.0.76
+        - TOMCAT_VERSION=${TOMCAT_VERSION}
     deploy:
       replicas: 0
