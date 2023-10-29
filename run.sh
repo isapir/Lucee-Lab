@@ -11,7 +11,7 @@ cd scripts
 
 cd ..
 
-ls -aln ../mnt
+ls -aln mnt
 
 docker compose up
 
