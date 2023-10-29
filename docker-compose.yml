@@ -13,10 +13,15 @@ services:
         - LUCEE_VERSION=${LUCEE_VERSION}
         - LUCEE_ADMIN_PASSWORD=${LUCEE_ADMIN_PASSWORD}
         - LUCEE_EXTENSIONS=${LUCEE_EXTENSIONS}
+    ## TODO: depends_on is ignored during build? consider switching to ubuntu image
+    # depends_on:
+    #   - alpine-builder
+    #   - tomcat-alpine
     env_file: .env
     volumes:
       - "${HOST_APP_WEBROOT}:${LUCEE_APP_WEBROOT}"
       - "${HOST_APP_LOGS}/tomcat:/srv/www/catalina-base/logs/"
+    ## to map Lucee cfml context, e.g. https://github.com/lucee/Lucee/tree/master/core/src/main/cfml/context
     # - "/workspace/src/lucee/5.x/core/src/main/cfml/context:/mnt/lucee-src-cfml-context"
     user: "${RUNAS_USER}"
     ports:
