@@ -2,7 +2,8 @@
 FROM alpine AS nginx-builder
 
 ARG NGINX_VERSION=1.25.1
-ARG NGINX_OPENSSL_VERSION=3.1.1
+ARG NGINX_OPENSSL_VERSION=3.5.4
+ARG NGINX_PCRE_VERSION=10.47
 ARG NGINX_ZLIB_VERSION=1.2.13
 ARG NGINX_DIR=/usr/local/nginx
 
@@ -12,6 +13,7 @@ ARG GROUP_ID=1000
 RUN apk --update add bash curl perl vim pcre-dev build-base linux-headers \
     && mkdir -p /usr/local/src && cd /usr/local/src \
     && curl -sL https://github.com/openssl/openssl/archive/refs/tags/openssl-${NGINX_OPENSSL_VERSION}.tar.gz | tar xvz -C . \
+    && curl -sL https://github.com/PCRE2Project/pcre2/releases/download/pcre2-${NGINX_PCRE_VERSION}/pcre2-${NGINX_PCRE_VERSION}.tar.gz | tar xvz -C . \
     && curl -sL https://github.com/madler/zlib/releases/download/v${NGINX_ZLIB_VERSION}/zlib-${NGINX_ZLIB_VERSION}.tar.gz | tar xvz -C . \
     && curl -sL https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz | tar xvz -C . \
     && cd nginx-${NGINX_VERSION} \
@@ -24,8 +26,8 @@ RUN apk --update add bash curl perl vim pcre-dev build-base linux-headers \
         --with-http_v2_module \
         --with-stream \
         --modules-path=/etc/nginx/modules \
-        --with-pcre \
         --with-openssl=../openssl-openssl-${NGINX_OPENSSL_VERSION} \
+        --with-pcre=../pcre2-${NGINX_PCRE_VERSION} \
         --with-zlib=../zlib-${NGINX_ZLIB_VERSION} \
         --with-cc-opt="-static" \
         --with-ld-opt="-static" \
