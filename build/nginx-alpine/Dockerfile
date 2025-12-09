@@ -36,7 +36,10 @@ RUN apk --update add bash curl perl vim pcre-dev build-base linux-headers \
         --http-fastcgi-temp-path=/tmp/fastcgi_temp \
         --http-uwsgi-temp-path=/tmp/uwsgi_temp \
         --http-scgi-temp-path=/tmp/scgi_temp \
-    && make \
+    # use almost all cores to compile \
+    && builder_cores=$(nproc) \
+    && builder_cores=$(( builder_cores > 3 ? builder_cores-2 : builder_cores )) \
+    && make -j${builder_cores} \
     && make install \
     && chmod g+srwX -R /usr/local
 
