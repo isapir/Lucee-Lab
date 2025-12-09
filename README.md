@@ -1,11 +1,25 @@
 Lucee Lab
 =
 
-To run just Lucee and nginx:
+Build images
+==
+
+To build all of the images:
 
 ```
-docker compose up
+docker compose build --progress=plain --no-cache
 ```
+
+Alternatively, add service names after the `build` command to build specific images
+
+Run services
+==
+
+- Adjust environment variables as needed in the `.env` file, `HOST_APP_WEBROOT`, `HOST_APP_LOGS`, versions, etc.
+
+- Run Lucee and nginx with `docker compose up`
+
+- Modify files in 
 
 To run any of the other components use the `--profile` switch for each, e.g. to run with Postgres and Redis, run:
 
