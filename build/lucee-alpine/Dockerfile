@@ -28,9 +28,9 @@ ARG LUCEE_DOWNLOAD=http://release.lucee.org/rest/update/provider/loader/
 
 RUN curl -sSL -o ${LUCEE_JAR_FILE} --create-dirs "${LUCEE_DOWNLOAD}${LUCEE_VERSION}" 
 
+## This will always use the ghcr.io/isapir/tomcat-alpine:latest on GitHub. See README on how to update it.
 
 FROM ghcr.io/isapir/tomcat-alpine AS tomcat-builder
-# FROM lucee-lab_tomcat-alpine AS tomcat-builder
 
 ARG LUCEE_JAR_FILE
 ARG LUCEE_ADMIN_PASSWORD

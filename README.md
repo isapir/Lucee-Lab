@@ -33,6 +33,13 @@ Advanced
 Multi-Arch Images:
 ===
 
+To build `lucee-alpine` from the latest `tomcat-alpine`, make sure that ghcr.io has the `:latest` tomcat version at https://github.com/users/isapir/packages/container/tomcat-alpine/versions
+
+To update the Tomcat version on ghcr.io:
+
+1. Tag the newly built image with `latest`, e.g. `docker image tag ghcr.io/isapir/tomcat-alpine:9.0.113 ghcr.io/isapir/tomcat-alpine:latest`
+2. Push the `latest` image, with `docker image push ghcr.io/isapir/tomcat-alpine:latest`
+
 To build and push multi-arch images take the following steps:
 
 1. Build the image, e.g. `docker compose build lucee`, on an AMD64 machine and tag it with a `-amd64` suffix
