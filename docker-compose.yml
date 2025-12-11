@@ -139,7 +139,7 @@ services:
 
   ### ---- helper image base for lucee
   tomcat-alpine:
-    image: ghcr.io/isapir/tomcat-alpine
+    image: ghcr.io/isapir/tomcat-alpine:${TOMCAT_VERSION}
     build:
       context: ./build/tomcat-alpine
       dockerfile: Dockerfile

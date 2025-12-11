@@ -1,5 +1,5 @@
 ARG BASE_JAVA_IMAGE=azul/zulu-openjdk-alpine:11-jre-latest
-ARG TOMCAT_VERSION=9.0.76
+ARG TOMCAT_VERSION=9.0.113
 
 ARG TOMCAT_FILENAME="apache-tomcat-${TOMCAT_VERSION}"
 ARG CATALINA_HOME_DIR=/srv/www/catalina-home
@@ -16,6 +16,7 @@ FROM ${BASE_JAVA_IMAGE} AS builder
 ## Inherit global args
 ARG TOMCAT_VERSION
 ARG TOMCAT_FILENAME
+ARG TOMCAT_BIN_URL=https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/${TOMCAT_FILENAME}.tar.gz
 ARG CATALINA_HOME_DIR
 
 ARG CATALINA_HOME
@@ -30,8 +31,8 @@ RUN apk --update add bash curl vim \
     && env \
     && mkdir -p /usr/local/src ${CATALINA_HOME_DIR} \
     && cd /usr/local/src \
-    && echo Downloading https://dlcdn.apache.org/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/${TOMCAT_FILENAME}.tar.gz \
-    && curl -sL https://dlcdn.apache.org/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/${TOMCAT_FILENAME}.tar.gz | tar xz -C . \
+    && echo Downloading ${TOMCAT_BIN_URL} \
+    && curl -sL ${TOMCAT_BIN_URL} | tar xz -C . \
     && mv /usr/local/src/${TOMCAT_FILENAME} ${CATALINA_HOME_DIR} \
     && ${CATALINA_HOME}/bin/makebase.sh ${CATALINA_BASE} \
     && echo "Hello Tomcat!" > ${CATALINA_BASE}/webapps/ROOT/index.html \
