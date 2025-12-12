@@ -5,6 +5,7 @@ services:
   ### ---- lucee
   lucee:
     image: ghcr.io/isapir/lucee-alpine:${LUCEE_VERSION}
+    container_name: ${PROJECT_ID}-lucee
     build:
       context: ./build/lucee-alpine
       dockerfile: Dockerfile
@@ -35,6 +36,7 @@ services:
   ### ---- nginx
   nginx:
     image: ghcr.io/isapir/nginx-alpine:${NGINX_VERSION}
+    container_name: ${PROJECT_ID}-nginx
     build:
       context: ./build/nginx-alpine
       dockerfile: Dockerfile
@@ -59,6 +61,7 @@ services:
   ### ---- postgres
   postgres:
     image: postgres:${POSTGRES_VERSION}
+    container_name: ${PROJECT_ID}-postgres
     env_file: .env
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
@@ -80,6 +83,7 @@ services:
   ### ---- mysql
   mysql:
     image: mysql:${MYSQL_VERSION}
+    container_name: ${PROJECT_ID}-mysql
     environment:
       - MYSQL_DATABASE=${MYSQL_DB}
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
@@ -97,6 +101,7 @@ services:
   ### ---- redis
   redis:
     image: redis:7
+    container_name: ${PROJECT_ID}-redis
     ports:
       - "${HOST_PORT_REDIS}:6379"
     # pid: "host"
@@ -106,6 +111,7 @@ services:
   ### ---- elasticsearch
   elasticsearch:
     image: elasticsearch:8.5.3
+    container_name: ${PROJECT_ID}-elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -120,6 +126,7 @@ services:
   ### ---- test email sending
   mailhog:
     image: mailhog/mailhog
+    container_name: ${PROJECT_ID}-mailhog
     expose:
       - 1025
     ports:
@@ -133,6 +140,7 @@ services:
   ### ---- helper image for multistage builds
   alpine-builder:
     image: ghcr.io/isapir/alpine-builder
+    container_name: ${PROJECT_ID}-alpine-builder
     build:
       context: ./build/alpine-builder
       dockerfile: Dockerfile
@@ -142,6 +150,7 @@ services:
   ### ---- helper image base for lucee
   tomcat-alpine:
     image: ghcr.io/isapir/tomcat-alpine:${TOMCAT_VERSION}
+    container_name: ${PROJECT_ID}-tomcat-alpine
     build:
       context: ./build/tomcat-alpine
       dockerfile: Dockerfile

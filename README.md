@@ -1,6 +1,14 @@
 Lucee Lab
 =
 
+Clone prject
+==
+
+`git clone --depth=1 https://github.com/isapir/Lucee-Lab.git ~/Documents/code/my-project`
+
+- Adjust environment variables as needed in the `.env` file, e.g. `PROJECT_ID`, `HOST_APP_WEBROOT`, `HOST_APP_LOGS`, versions, etc.
+
+
 Build images
 ==
 
@@ -15,11 +23,9 @@ Alternatively, add service names after the `build` command to build specific ima
 Run services
 ==
 
-- Adjust environment variables as needed in the `.env` file, `HOST_APP_WEBROOT`, `HOST_APP_LOGS`, versions, etc.
-
 - Run Lucee and nginx with `docker compose up`
 
-- Modify files in 
+- Modify files in `www/app/webroot` or map a different host directory to edit application code
 
 To run any of the other components use the `--profile` switch for each, e.g. to run with Postgres and Redis, run:
 
