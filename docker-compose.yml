@@ -21,9 +21,11 @@ services:
     env_file: .env
     volumes:
       - "${HOST_APP_WEBROOT}:${LUCEE_APP_WEBROOT}"
-      - "${HOST_APP_LOGS}/tomcat:/srv/www/catalina-base/logs/"
+      - "${HOST_APP_CONFIG}/lucee-server/context:/srv/www/catalina-base/lucee-server/context"
+      - "${HOST_APP_CONFIG}/lucee-server/context/logs:/srv/www/catalina-base/lucee-server/context/logs"
+      - "${HOST_APP_LOGS}/tomcat:/srv/www/catalina-base/logs"
     ## to map Lucee cfml context, e.g. https://github.com/lucee/Lucee/tree/master/core/src/main/cfml/context
-    # - "/workspace/src/lucee/5.x/core/src/main/cfml/context:/mnt/lucee-src-cfml-context"
+    # - "~/Code/lucee/6.x/core/src/main/cfml/context:/mnt/lucee-src-cfml-context"
     user: "${RUNAS_USER}"
     ports:
       - "${HOST_PORT_LUCEE}:8080"

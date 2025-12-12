@@ -1,7 +1,6 @@
 # set Tomcat webroot via server.xml Service/Engine/Host/Context#docBase
 CATALINA_OPTS="${CATALINA_OPTS} -Dserver.webroot=${SERVER_WEBROOT}"
 CATALINA_OPTS="${CATALINA_OPTS} -Dlucee.server.dir=${CATALINA_BASE}"
-CATALINA_OPTS="${CATALINA_OPTS} -Dlucee.web.dir=${CATALINA_BASE}/lucee-web"
 
 CATALINA_OPTS="${CATALINA_OPTS} -XshowSettings:vm"
 
