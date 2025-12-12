@@ -16,13 +16,13 @@ services:
         - LUCEE_EXTENSIONS=${LUCEE_EXTENSIONS}
     ## TODO: depends_on is ignored during build? consider switching to ubuntu image
     # depends_on:
-    #   - alpine-builder
+    #   - builder-alpine
     #   - tomcat-alpine
     env_file: .env
     volumes:
       - "${HOST_APP_WEBROOT}:${LUCEE_APP_WEBROOT}"
-      - "${HOST_APP_CONFIG}/lucee-server/context:/srv/www/catalina-base/lucee-server/context"
-      - "${HOST_APP_CONFIG}/lucee-server/context/logs:/srv/www/catalina-base/lucee-server/context/logs"
+      # - "${HOST_APP_CONFIG}/lucee-server/context:/srv/www/lucee-server/context"
+      - "${HOST_APP_LOGS}/lucee:/srv/www/lucee-server/context/logs"
       - "${HOST_APP_LOGS}/tomcat:/srv/www/catalina-base/logs"
     ## to map Lucee cfml context, e.g. https://github.com/lucee/Lucee/tree/master/core/src/main/cfml/context
     # - "~/Code/lucee/6.x/core/src/main/cfml/context:/mnt/lucee-src-cfml-context"
@@ -140,11 +140,11 @@ services:
   #### Helper images below used for Build stages only, therefore deploy/replicas: 0
 
   ### ---- helper image for multistage builds
-  alpine-builder:
-    image: ghcr.io/isapir/alpine-builder
-    container_name: ${PROJECT_ID}-alpine-builder
+  builder-alpine:
+    image: ghcr.io/isapir/builder-alpine
+    container_name: ${PROJECT_ID}-builder-alpine
     build:
-      context: ./build/alpine-builder
+      context: ./build/builder-alpine
       dockerfile: Dockerfile
     deploy:
       replicas: 0

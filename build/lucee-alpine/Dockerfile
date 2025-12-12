@@ -7,6 +7,9 @@ ARG GROUP_ID=1000
 
 ARG SERVER_WEBROOT=/srv/www/catalina-base/webapps/ROOT
 
+# parent dir of lucee-server
+ARG LUCEE_SERVER_PARENT_DIR=/srv/www
+
 # Allow to specify the Lucee Admin Password at build time with --build-arg LUCEE_ADMIN_PASSWORD=changeit
 ARG LUCEE_ADMIN_PASSWORD=
 
@@ -19,8 +22,7 @@ ARG CATALINA_OPTS=
 
 
 ## downloads utils and creates /usr/local/src
-FROM ghcr.io/isapir/alpine-builder AS builder
-# FROM lucee-lab_alpine-builder AS builder
+FROM ghcr.io/isapir/builder-alpine AS builder
 
 ARG LUCEE_VERSION
 ARG LUCEE_JAR_FILE
@@ -35,16 +37,17 @@ FROM ghcr.io/isapir/tomcat-alpine AS tomcat-builder
 ARG LUCEE_JAR_FILE
 ARG LUCEE_ADMIN_PASSWORD
 ARG LUCEE_EXTENSIONS
+ARG LUCEE_SERVER_PARENT_DIR
 ARG CATALINA_OPTS
 ARG SERVER_WEBROOT
 ARG USER_ID
 ARG GROUP_ID
 
-ARG LUCEE_SERVER_DIR=${CATALINA_BASE}/lucee-server
-ARG DIRS_TO_REMOVE=/srv/www/catalina-base/lucee-server/context/extensions/available/* /srv/www/catalina-home/apache-tomcat-9.0.70/webapps/*
+ARG DIRS_TO_REMOVE=${LUCEE_SERVER_PARENT_DIR}/context/extensions/available/*
 
 ENV SERVER_WEBROOT=${SERVER_WEBROOT}
 ENV LUCEE_EXTENSIONS=${LUCEE_EXTENSIONS}
+ENV LUCEE_SERVER_PARENT_DIR=${LUCEE_SERVER_PARENT_DIR}
 
 COPY --chown=${USER_ID}:${GROUP_ID} ./resources/catalina-base ${CATALINA_BASE}
 
@@ -61,26 +64,28 @@ RUN echo "<cfoutput>Hello Lucee #Server.lucee.version# at #dateTimeFormat(now(),
     && rm -rf ${DIRS_TO_REMOVE} \
     ## create password.txt file if password is set
     &&  if [ "$LUCEE_ADMIN_PASSWORD" != "" ] ; then \
-            echo "Creating password file at ${LUCEE_SERVER_DIR}/context/password.txt" \
-            && echo $LUCEE_ADMIN_PASSWORD > "${LUCEE_SERVER_DIR}/context/password.txt" \
+            echo "Creating password file at ${LUCEE_SERVER_PARENT_DIR}/context/password.txt" \
+            && mkdir -p "${LUCEE_SERVER_PARENT_DIR}/context" \
+            && echo $LUCEE_ADMIN_PASSWORD > "${LUCEE_SERVER_PARENT_DIR}/context/password.txt" \
         ; else \
-            echo "You can set the Lucee Admin password at ${LUCEE_SERVER_DIR}/context/password.txt" \
+            echo "You can set the Lucee Admin password at ${LUCEE_SERVER_PARENT_DIR}/context/password.txt" \
         ; fi \
     && chmod g+srwX -R /srv/www
 
 
 FROM ghcr.io/isapir/tomcat-alpine AS lucee
 
+## extensions were added in previous stage, but this lets us see it in stdout when Lucee starts
+ARG LUCEE_EXTENSIONS
+ARG LUCEE_SERVER_PARENT_DIR
 ARG SERVER_WEBROOT
 ARG USER_ID
 ARG GROUP_ID
 
-## extensions were added in previous stage, but this lets us see it in stdout when Lucee starts
-ARG LUCEE_EXTENSIONS
-ENV LUCEE_EXTENSIONS=${LUCEE_EXTENSIONS}
-
-
 ENV SERVER_WEBROOT=${SERVER_WEBROOT}
+ENV LUCEE_EXTENSIONS=${LUCEE_EXTENSIONS}
+ENV LUCEE_SERVER_PARENT_DIR=${LUCEE_SERVER_PARENT_DIR}
+
 
 COPY --chown=${USER_ID}:${GROUP_ID} --from=tomcat-builder /srv/www /srv/www
 
