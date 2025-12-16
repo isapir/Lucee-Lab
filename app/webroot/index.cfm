@@ -5,7 +5,7 @@
     <body>
 
 <cfoutput>
-    <h1>Lucee #Server.lucee.version#</h1>
+    <h1>Lucee #Server.lucee.version# !!!</h1>
     <h2>Server time: #now()#</h2>
     <h2>Webroot is mounted from host: #Server.system.environment.HOST_APP_WEBROOT#
     
@@ -14,12 +14,19 @@
         <p>* The Lucee Admin is only accessible on the Lucee port (#Server.system.environment.HOST_PORT_LUCEE#)
     </cfif>
     
-    Password is: #Server.system.environment.LUCEE_ADMIN_PASSWORD#
+    <p>Password is: #Server.system.environment.LUCEE_ADMIN_PASSWORD#
+    <p>
+    <cfset arrPaths = [ "lucee-web", "lucee-server", "lucee-config", "web-root-directory", "temp-directory", "home-directory", "system-directory", "web-context-hash", "web-context-label" ]>
+    <cfloop array="#arrPaths#" item="path">
+        {#path#}: #expandPath('{#path#}')#<br>
+    </cfloop>
 </cfoutput>
+
+<cfflush interval="1">
 
 <p>
 <cftry>
-    <cfquery name="q" datasource="postgres">
+    <cfquery name="q" datasource="postgres" timeout="2">
         SELECT  version() AS db_version,
                 current_timestamp;
     </cfquery>
@@ -33,7 +40,7 @@
 
 <p>
 <cftry>
-    <cfquery name="q" datasource="mysql">
+    <cfquery name="q" datasource="mysql" timeout="2">
         SELECT  version() AS db_version,
                 current_timestamp;
     </cfquery>

@@ -25,7 +25,7 @@ Run services
 
 - Run Lucee and nginx with `docker compose up`
 
-- Modify files in `www/app/webroot` or map a different host directory to edit application code
+- Modify files in `app/webroot` or map a different host directory to edit application code
 
 To run any of the other components use the `--profile` switch for each, e.g. to run with Postgres and Redis, run:
 
@@ -41,17 +41,21 @@ Multi-Arch Images:
 
 To build `lucee-alpine` from the latest `tomcat-alpine`, make sure that ghcr.io has the `:latest` tomcat version at https://github.com/users/isapir/packages/container/tomcat-alpine/versions
 
-To update the Tomcat version on ghcr.io:
+If Tomcat was rebuilt then be sure to tag the new image as `:latest`
 
 1. Tag the newly built image with `latest`, e.g. `docker image tag ghcr.io/isapir/tomcat-alpine:9.0.113 ghcr.io/isapir/tomcat-alpine:latest`
-2. Push the `latest` image, with `docker image push ghcr.io/isapir/tomcat-alpine:latest`
+
+To update the Tomcat version on ghcr.io:
+
+1. Tag the latest image build as `:latest`
+1. Push the `latest` image, with `docker image push ghcr.io/isapir/tomcat-alpine:latest`
 
 To build and push multi-arch images take the following steps:
 
 1. Build the image, e.g. `docker compose build lucee`, on an AMD64 machine and tag it with a `-amd64` suffix
-2. Build the image on an ARM64 machine and tag it with a `-arm64` suffix
-3. Push both images to the container registry
-4. Create a manifest referencing both images and push it to the registry
+1. Build the image on an ARM64 machine and tag it with a `-arm64` suffix
+1. Push both images to the container registry
+1. Create a manifest referencing both images and push it to the registry
 
 For example, to create lucee-alpine:5.4.1.8 and push it to the ghcr.io/isapir registry.  The example below assumes the Environment variable `LUCEE_VERSION=5.4.1.8`
 
