@@ -21,7 +21,7 @@ services:
     env_file: .env
     volumes:
       - "${HOST_APP_WEBROOT}:${LUCEE_APP_WEBROOT}"
-      - "${HOST_APP_CONFIG}/CFConfig.json:/srv/www/app/config/lucee-server/context/.CFConfig.json"
+      - "${HOST_APP_CONFIG}/lucee/CFConfig.json:/srv/www/app/config/lucee-server/context/.CFConfig.json"
       - "${HOST_APP_LOGS}/lucee:/srv/www/lucee-server/context/logs"
       - "${HOST_APP_LOGS}/tomcat:/srv/www/catalina-base/logs"
     ## to map Lucee cfml context, e.g. https://github.com/lucee/Lucee/tree/master/core/src/main/cfml/context
@@ -48,7 +48,8 @@ services:
         - NGINX_ZLIB_VERSION=${NGINX_ZLIB_VERSION}
     env_file: .env
     volumes:
-      - "${HOST_APP_CONFIG}/nginx:/usr/local/nginx/conf"
+      - "${HOST_APP_CONFIG}/nginx/nginx.conf:/usr/local/nginx/conf/nginx.conf"
+      - "${HOST_APP_CONFIG}/nginx/nginx-lucee:/usr/local/nginx/conf/nginx-lucee"
       - "${HOST_APP_LOGS}/nginx:/usr/local/nginx/logs"
       - "${HOST_APP_WEBROOT}:/srv/www/app/webroot"
     user: "${RUNAS_USER}"
