@@ -71,7 +71,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       ## host dir should be created beforehand by ${RUNAS_USER}
-      - "${HOST_APP_DATA}/postgres:/var/lib/postgresql/data"
+      - "${HOST_APP_DATA}/postgres:/var/lib/postgresql"
       ## map host users to container with readonly mount so that user would work
       - "/etc/passwd:/etc/passwd:ro"
     ## use user:group from env file which should be in host /etc/passwd

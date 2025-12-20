@@ -5,4 +5,3 @@ mnt/data/postgres
 
 mnt/logs
 
-www/app/config/lucee-server/context/*
